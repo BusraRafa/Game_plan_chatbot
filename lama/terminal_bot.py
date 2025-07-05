@@ -1,0 +1,114 @@
+import sys
+import time
+import threading
+#for json
+import json
+from datetime import datetime
+import os
+
+from langchain_ollama import ChatOllama
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from mock_users import USER_PROFILES 
+
+# --- model ---
+llm = ChatOllama(model="llama3.2:3b", 
+                 base_url="http://localhost:11434",
+                 temperature=0.7,
+                 top_k=40,
+                 top_p=0.9,
+                 repeat_penalty=1.1,
+                 num_ctx=4096
+                 )
+output_parser = StrOutputParser()
+
+# --- Select user (simulate login) ---
+print("Available users:")
+for key, user in USER_PROFILES.items():
+    print(f"{key}: {user['username']}")
+selected_user = input("Enter user key (e.g., 'user1'): ").strip()
+
+if selected_user not in USER_PROFILES:
+    print("Invalid user key. Exiting.")
+    exit()
+
+user_profile = USER_PROFILES[selected_user]
+chat_history = []
+
+#----------for json--------------
+chat_log={
+    "username":user_profile["username"],
+    "sport":user_profile["sport"],
+    "details":user_profile["details"],
+    "timestamp":datetime.now().isoformat(),
+    "chat_details":[]
+}
+
+
+# --- Personalized system message ---
+system_message = f"""
+You are a concise, smart, and context-aware assistant who gives sharp, relevant replies only.
+This user is a sports coach. They specialize in: **{user_profile['sport']}**.
+Here’s what the user said about themselves:
+---
+{user_profile['details']}
+---
+Use this info to personalize your tone, advice, examples, and especially team-specific responses.
+If they ask about "my team", infer from the text above.
+Do not give general explanations. Focus only on what they ask.
+Keep answers short and inline unless explicitly asked for depth.
+"""
+
+print(f"\n🟢 Chat started for: {user_profile['username']}")
+print("Type 'exit' to quit.\n")
+
+stop_thinking = False
+
+def show_thinking_animation():
+    while not stop_thinking:
+        for dots in [".  ", ".. ", "..."]:
+            if stop_thinking:
+                break
+            sys.stdout.write(f"\rThinking{dots}")
+            sys.stdout.flush()
+            time.sleep(0.4)
+    sys.stdout.write("\r" + " " * 30 + "\r") 
+
+# --- Chat loop ---
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ["exit", "quit"]:
+        print("Goodbye! 👋")
+        break
+
+    chat_history.append(("user", user_input))
+    chat_log["chat_details"].append({"role":"user","content":user_input})
+    prompt = ChatPromptTemplate.from_messages(
+        [("system", system_message)] + chat_history
+    )
+    chain = prompt | llm | output_parser
+
+    # Start thinking animation in background
+    stop_thinking = False
+    t = threading.Thread(target=show_thinking_animation)
+    t.start()
+
+    # Call the model
+    response = chain.invoke({})
+
+    # Stop animation
+    stop_thinking = True
+    t.join()
+
+    print(f": {response.strip()}\n")
+    chat_history.append(("assistant", response.strip()))
+    chat_log["chat_details"].append({"role":"assistant","content":response.strip()})
+    
+#saving json file
+filename=f"chat_logs/{user_profile['username']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+os.makedirs("chat_logs",exist_ok=True)
+
+with open(filename,"w",encoding="utf-8") as f:
+    json.dump(chat_log,f,ensure_ascii=False,indent=2)
+    
+print(f"\n the chat is saved to the {filename}")
