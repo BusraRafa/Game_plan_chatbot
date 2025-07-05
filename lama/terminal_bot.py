@@ -10,6 +10,9 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from mock_users import USER_PROFILES 
+#for memory summary
+from langchain.memory import ConversationSummaryBufferMemory
+from langchain_community.chat_message_histories import ChatMessageHistory
 
 # --- model ---
 llm = ChatOllama(model="llama3.2:3b", 
@@ -21,6 +24,10 @@ llm = ChatOllama(model="llama3.2:3b",
                  num_ctx=4096
                  )
 output_parser = StrOutputParser()
+
+
+
+#def chat(chat_history dict = none,user_input,  )
 
 # --- Select user (simulate login) ---
 print("Available users:")
@@ -77,7 +84,7 @@ def show_thinking_animation():
 # --- Chat loop ---
 while True:
     user_input = input("You: ")
-    if user_input.lower() in ["exit", "quit"]:
+    if user_input.lower() in ["exit", "quit","bye"]:
         print("Goodbye! 👋")
         break
 
@@ -104,6 +111,22 @@ while True:
     chat_history.append(("assistant", response.strip()))
     chat_log["chat_details"].append({"role":"assistant","content":response.strip()})
     
+# --- FINAL SUMMARY USING THE MODEL ---
+formatted_chat = "\n".join(
+    [f"{msg['role'].capitalize()}: {msg['content']}" for msg in chat_log["chat_details"]]
+)
+
+summary_prompt = ChatPromptTemplate.from_template(
+    "Summarize this conversation into a single paragraph. Focus on what the user asked, what they were interested in, and what the assistant provided:\n\n{chat}"
+)
+summary_chain = summary_prompt | llm | output_parser
+summary_text = summary_chain.invoke({"chat": formatted_chat}).strip()
+
+chat_log["summary"] = summary_text
+
+print("\n📝 Generated Summary:\n")
+print(summary_text)
+
 #saving json file
 filename=f"chat_logs/{user_profile['username']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 os.makedirs("chat_logs",exist_ok=True)
