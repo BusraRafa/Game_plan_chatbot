@@ -124,7 +124,7 @@ summary_text = summary_chain.invoke({"chat": formatted_chat}).strip()
 
 chat_log["summary"] = summary_text
 
-print("\n📝 Generated Summary:\n")
+print("\n Generated Summary:\n")
 print(summary_text)
 
 #saving json file
