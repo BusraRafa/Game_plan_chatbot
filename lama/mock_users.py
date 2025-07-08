@@ -7,6 +7,6 @@ USER_PROFILES = {
     "user2": {
         "username": "coach_james",
         "sport": "Basketball",
-        "details": "I am a basketball tactics coach and I love Golden State Warriors."
+        "details": "As a passionate basketball coach, I take immense pride in guiding my teams to reach their full potential. I currently coach 3 different teams, each with their unique strengths and challenges. My favorite player is Stephen Curry, whose skill, leadership, and dedication inspire my coaching philosophy. I follow the Golden State Warriors closely, drawing lessons from their teamwork and ability to adapt under pressure. My coaching approach revolves around building discipline, encouraging teamwork, and pushing players to improve both mentally and physically, just as Stephen Curry does on the court. With each team I coach, I focus on developing well-rounded players and fostering a winning mentality."
     }
 }
