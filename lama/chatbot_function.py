@@ -81,3 +81,5 @@ def generate_response_from_chat(chat, user, user_input):
 
 # 9. Return assistant reply + updated chat log in ******text**********
     updated_chat_log = f"{full_chat_text}\nUser: {user_input}\nAssistant: {response}"
+    
+    return response,updated_chat_log
