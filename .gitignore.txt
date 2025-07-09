@@ -1,0 +1,12 @@
+chat_logs/
+requirements.txt
+requirements_python3.10.0.txt
+.devcontainer/
+lama/__pycache__/
+lama/chatlogs/
+lama/chatbot.py
+lama/chatbot_function.py
+lama/demo_chatbot.py
+lama/mock_users.py
+lama/simple_terminal_bot.py
+lama/testing_bot.py
