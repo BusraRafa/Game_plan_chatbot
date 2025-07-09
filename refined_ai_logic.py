@@ -11,7 +11,7 @@ User = get_user_model()
 # LLM setup llama3.2:3b
 # --- model ---
 llm = ChatOllama(model="llama3.2:3b", 
-                 base_url="http://localhost:11434",
+                 #base_url="http://localhost:11434",
                  temperature=0.7,
                  top_k=40,
                  top_p=0.9,

@@ -16,7 +16,7 @@ from langchain_community.chat_message_histories import ChatMessageHistory
 
 # --- model ---
 llm = ChatOllama(model="llama3.2:3b-instruct-q4_K_M", 
-                 base_url="http://localhost:11434",
+                 #base_url="http://localhost:11434",
                  temperature=0.7,
                  top_k=40,
                  top_p=0.9,

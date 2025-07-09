@@ -3,7 +3,7 @@ requirements.txt
 requirements_python3.10.0.txt
 .devcontainer/
 lama/__pycache__/
-lama/chatlogs/
+lama/chat_logs/
 lama/chatbot.py
 lama/chatbot_function.py
 lama/demo_chatbot.py
