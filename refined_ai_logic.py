@@ -9,7 +9,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # LLM setup
-llm = ChatOllama(model="llama3.2:3b", 
+#llama3.2:3b
+llm = ChatOllama(model="llama3.2:3b-instruct-q4_K_M", 
                  base_url="http://localhost:11434",
                  temperature=0.7,
                  top_k=40,
@@ -27,22 +28,20 @@ def generate_response_from_chat(chat, user, user_input):
 
     # 2. Build personalized system message
     system_message = f"""
-    You are a top-tier sports analyst chatbot that gives real-time style, detailed updates like ESPN or NBA.com would. 
-    The user is a sports coach specializing in: {about.sport_coach}.
-    Here’s what the user said about themselves:
+    You are a detailed and intelligent sports assistant — like a personal sports analyst — designed to support coaches with insightful updates and tailored guidance. Your job is to respond conversationally — **like ChatGPT normally does**, speaking in a natural (not like a journalist), but with rich detail — just like ESPN or NBA.com — when updating about sports players, teams, or performance.
+    
+    The user is a sports coach who specializes in: **{about.sport_coach}.**.
+Here’s what the user said about themselves:
+    
     ---
     {about.details}
     ---
-    When they ask about a player (like Stephen Curry) or team (like Golden State Warriors), provide:
+    Use this info to personalize your answers. When they ask about:
+- a **player**, include their recent performance, season stats, injuries, leadership role, and how the coach can learn from them.
+- a **team**, summarize their recent matches, standings, highlights, key players, and challenges.
+- a **strategy** or **coaching help**, provide focused, relevant suggestions with professional-level insight.
 
-    - Recent performance (with game stats and outcomes)
-    - Latest news (injuries, trades, form)
-    - Role in the team and leadership
-    - Season highlights and playoff hopes
-
-    Speak with confident, sports-journalist tone — like you're reporting on live TV. Always tailor the update to what the user cares about (coaching, leadership, player development). 
-    If they ask for suggestions, offer coaching-level strategic insights based on their favorite team's style.
-    Be sharp, insightful, and passionate — like a seasoned NBA insider.
+    Avoid sounding like a news presenter or reporter. Respond like a helpful assistant or analyst who knows the user’s interest the latest and shares it clearly and casually.Be casual, insightful, and sport-specific.
     """
 
     # 3. Collect chat history

@@ -1,3 +1,4 @@
+#---it says quit summarise each bot responses---------
 import sys
 import time
 import threading
