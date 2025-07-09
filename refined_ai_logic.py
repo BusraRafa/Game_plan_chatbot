@@ -36,9 +36,9 @@ def generate_response_from_chat(chat, user, user_input):
     {about.details}
     ---
     Use this info to personalize your answers. When they ask about:
-- a **player**, include their recent performance, season stats, injuries, leadership role, and how the coach can learn from them.
-- a **team**, summarize their recent matches, standings, highlights, key players, and challenges.
-- a **strategy** or **coaching help**, provide focused, relevant suggestions with professional-level insight.
+    - a **player**, include their recent performance, season stats, injuries, leadership role, and how the coach can learn from them.
+    - a **team**, summarize their recent matches, standings, highlights, key players, and challenges.
+    - a **strategy** or **coaching help**, provide focused, relevant suggestions with professional-level insight.
 
     Avoid sounding like a news presenter or reporter. Respond like a helpful assistant or analyst who knows the user’s interest the latest and shares it clearly and casually.Be casual, insightful, and sport-specific.
     """
