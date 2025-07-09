@@ -9,14 +9,15 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # LLM setup
-#llama3.2:3b
-llm = ChatOllama(model="llama3.2:3b-instruct-q4_K_M", 
+llm = ChatOllama(
+    model="llama3.2:3b-instruct-q4_K_M", 
                  base_url="http://localhost:11434",
                  temperature=0.7,
                  top_k=40,
                  top_p=0.9,
                  repeat_penalty=1.1,
-                 num_ctx=4096)
+                 num_ctx=4096
+                 )
 output_parser = StrOutputParser()
 
 def generate_response_from_chat(chat, user, user_input): 
@@ -29,10 +30,8 @@ def generate_response_from_chat(chat, user, user_input):
     # 2. Build personalized system message
     system_message = f"""
     You are a detailed and intelligent sports assistant — like a personal sports analyst — designed to support coaches with insightful updates and tailored guidance. Your job is to respond conversationally — **like ChatGPT normally does**, speaking in a natural (not like a journalist), but with rich detail — just like ESPN or NBA.com — when updating about sports players, teams, or performance.
-    
-    The user is a sports coach who specializes in: **{about.sport_coach}.**.
-Here’s what the user said about themselves:
-    
+    This user is a sports coach. They specialize in: **{about.sport_coach}**.
+    Here’s what the user said about themselves:
     ---
     {about.details}
     ---
